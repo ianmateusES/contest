@@ -17,6 +17,7 @@ import ufc.quixada.npi.contest.model.Evento;
 import ufc.quixada.npi.contest.model.Pessoa;
 import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 import ufc.quixada.npi.contest.util.Constants;
+import ufc.quixada.npi.contest.util.GetEvento;
 import ufc.quixada.npi.contest.model.Trabalho;
 import java.util.List;
 import ufc.quixada.npi.contest.model.Revisao;
@@ -72,7 +73,7 @@ public class AutorControllerProduct {
 				return Constants.TEMPLATE_REVISAO_AUTOR;
 			}
 			redirect.addFlashAttribute("revisao_inexistente", messageService.getMessage("REVISAO_INEXISTENTE"));
-			return "redirect:/autor/listarTrabalhos/" + evento.getId();
+			return "redirect:/autor/listarTrabalhos/" + GetEvento.getId(evento);
 		}
 		return AutorController.AUTOR_SEM_PERMISSAO_REVISAO;
 	}

@@ -6,6 +6,7 @@ import ufc.quixada.npi.contest.model.Evento;
 import ufc.quixada.npi.contest.model.Modalidade;
 import ufc.quixada.npi.contest.repository.EventoRepository;
 import ufc.quixada.npi.contest.repository.ModalidadeRepository;
+import ufc.quixada.npi.contest.util.GetEvento;
 
 @Service
 public class ModalidadeService {
@@ -18,7 +19,7 @@ public class ModalidadeService {
 
 	public void adicionarModalidadeSubmissao(Evento evento, String nome) {
 		if (!nome.isEmpty()) {
-			if (!exists(nome, evento.getId())) {
+			if (!exists(nome, GetEvento.getId(evento))) {
 				evento.addModalidadeSubmissao(new Modalidade(nome));
 				eventoRepository.save(evento);
 			}

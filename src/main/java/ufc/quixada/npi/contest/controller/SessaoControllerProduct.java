@@ -4,6 +4,8 @@ package ufc.quixada.npi.contest.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import ufc.quixada.npi.contest.service.SessaoService;
 import ufc.quixada.npi.contest.service.TrabalhoService;
+import ufc.quixada.npi.contest.util.GetEvento;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import ufc.quixada.npi.contest.model.Sessao;
@@ -48,7 +50,7 @@ public class SessaoControllerProduct {
 		if (fromSessao) {
 			return "redirect:/sessao/" + sessao.getId();
 		} else {
-			return "redirect:/evento/" + sessao.getEvento().getId() + "/sessoes";
+			return "redirect:/evento/" + GetEvento.getId(sessao.getEvento()) + "/sessoes";
 		}
 	}
 
@@ -60,6 +62,6 @@ public class SessaoControllerProduct {
 		sessaoService.adicionarTrabalhos(sessao, trabalhos);
 		redirectAttributes.addFlashAttribute("tab", "nao-alocados");
 		redirectAttributes.addFlashAttribute("info", "Trabalhos alocados com sucesso");
-		return "redirect:/evento/" + sessao.getEvento().getId() + "/sessoes";
+		return "redirect:/evento/" + GetEvento.getId(sessao.getEvento()) + "/sessoes";
 	}
 }

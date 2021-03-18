@@ -25,6 +25,7 @@ import ufc.quixada.npi.contest.model.Participacao;
 import ufc.quixada.npi.contest.model.Pessoa;
 import ufc.quixada.npi.contest.service.AtividadeService;
 import ufc.quixada.npi.contest.service.ParticipacaoService;
+import ufc.quixada.npi.contest.util.GetEvento;
 import ufc.quixada.npi.contest.validator.ContestException;
 
 @RequestMapping("/atividade")
@@ -107,7 +108,7 @@ public class AtividadeController {
 			atividadeService.delete(atividade.getId());
 			redirectAttributes.addFlashAttribute("info", "Atividade excluída com sucesso");
 		}
-		return "redirect:/evento/" + atividade.getEvento().getId() + "/atividades";
+		return "redirect:/evento/" + GetEvento.getId(atividade.getEvento()) + "/atividades";
 	}
 
     @PreAuthorize("#atividade != null && #atividade.evento.isOrganizador(authentication.principal)")

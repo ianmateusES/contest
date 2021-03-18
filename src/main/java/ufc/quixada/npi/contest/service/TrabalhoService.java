@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ufc.quixada.npi.contest.model.*;
 import ufc.quixada.npi.contest.repository.TrabalhoRepository;
+import ufc.quixada.npi.contest.util.GetEvento;
 import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TrabalhoService {
 	}
 
 	public List<Trabalho> getTrabalhosSemSessaoNoEvento(Evento evento) {
-		return trabalhoRepository.getTrabalhosSemSessaoNoEvento(evento.getId());
+		return trabalhoRepository.getTrabalhosSemSessaoNoEvento(GetEvento.getId(evento));
 	}
 
 	public List<Trabalho> getTrabalhosTrilha(Trilha trilha) {
