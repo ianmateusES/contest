@@ -12,6 +12,7 @@ import ufc.quixada.npi.contest.model.Sessao;
 import ufc.quixada.npi.contest.model.Trabalho;
 import ufc.quixada.npi.contest.repository.SessaoRepository;
 import ufc.quixada.npi.contest.repository.TrabalhoRepository;
+import ufc.quixada.npi.contest.util.GetEvento;
 
 import java.util.List;
 
@@ -65,6 +66,6 @@ public class SessaoService {
 			delete(sessao.getId());
 			redirectAttributes.addFlashAttribute("info", "Sessão excluída com sucesso");
 		}
-		return "redirect:/evento/" + sessao.getEvento().getId() + "/sessoes";
+		return "redirect:/evento/" + GetEvento.getId(sessao.getEvento()) + "/sessoes";
 	}
 }

@@ -7,6 +7,7 @@ import ufc.quixada.npi.contest.model.Trilha;
 import ufc.quixada.npi.contest.repository.EventoRepository;
 import ufc.quixada.npi.contest.repository.TrabalhoRepository;
 import ufc.quixada.npi.contest.repository.TrilhaRepository;
+import ufc.quixada.npi.contest.util.GetEvento;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class TrilhaService {
 	private boolean validacaoTrilha(Evento evento, Trilha trilha) {
 		String nome = trilha.getNome();
 		if (trilha != null && !nome.isEmpty()) {
-			if (!exists(nome, evento.getId())) {
+			if (!exists(nome, GetEvento.getId(evento))) {
 				return true;
 			}
 		}

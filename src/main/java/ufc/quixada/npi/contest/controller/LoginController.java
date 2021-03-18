@@ -17,6 +17,7 @@ import ufc.quixada.npi.contest.model.Pessoa;
 import ufc.quixada.npi.contest.model.Token;
 import ufc.quixada.npi.contest.service.*;
 import ufc.quixada.npi.contest.util.Constants;
+import ufc.quixada.npi.contest.util.GetPessoa;
 import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 import ufc.quixada.npi.contest.validator.ContestException;
 
@@ -106,14 +107,14 @@ public class LoginController {
 		try{
 			
 			pessoaLogada.setNome(pessoa.getNome());
-			pessoaLogada.setEmail(pessoa.getEmail());
+			pessoaLogada.setEmail(GetPessoa.getEmail(pessoa));
 			
 			pessoaService.addOrUpdate(pessoaLogada);
 			mav.addObject(PESSOA, pessoa);
 			mav.addObject("success","Dados alterados com sucesso.");
 		}catch(DataIntegrityViolationException | ContestException ex){
 			logger.warn("Usuario[id={}] - O email {} pertence a outro usuario do sistema", pessoaLogada.getId()
-					,pessoa.getEmail(), ex);
+					, GetPessoa.getEmail(pessoa), ex);
 			mav.addObject("error", "Existe algum cadastro com o email selecionado");
 		}
 		

@@ -5,6 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ufc.quixada.npi.contest.model.Pessoa;
 import ufc.quixada.npi.contest.service.MessageService;
+import ufc.quixada.npi.contest.util.GetPessoa;
 
 import javax.inject.Named;
 
@@ -29,7 +30,7 @@ public class PessoaValidator implements Validator{
 	public void validate(Object target, Errors errors) {
 		Pessoa pessoa = (Pessoa) target;
 		if(pessoa != null){
-			if(getEmail(pessoa) == null){
+			if(GetPessoa.getEmail(pessoa) == null){
 				errors.rejectValue(EMAIL, EMAIL_NULL , messageService.getMessage(EMAIL_NULL));
 			}
 			if(getNome(pessoa) == null){
@@ -40,12 +41,8 @@ public class PessoaValidator implements Validator{
 		}
 	}
 	
-	private String getEmail(Pessoa pessoa) {
-		return pessoa.getEmail();
-	}
-	
 	private String getNome(Pessoa pessoa) {
-		return pessoa.getEmail();
+		return pessoa.getNome();
 	}
 
 }

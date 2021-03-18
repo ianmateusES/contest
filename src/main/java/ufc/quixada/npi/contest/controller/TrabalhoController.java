@@ -23,6 +23,7 @@ import ufc.quixada.npi.contest.model.Revisao;
 import ufc.quixada.npi.contest.model.Trabalho;
 import ufc.quixada.npi.contest.service.StorageService;
 import ufc.quixada.npi.contest.service.TrabalhoService;
+import ufc.quixada.npi.contest.util.GetEvento;
 import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 
 @Controller
@@ -52,7 +53,7 @@ public class TrabalhoController {
 			return "trabalho/detalhe-trabalho";
 		}
 		attributes.addFlashAttribute("error", "Você não tem permissão para acessar esse trabalho");
-		return "redirect:/evento/" + trabalho.getEvento().getId();
+		return "redirect:/evento/" + GetEvento.getId(trabalho.getEvento());
 	}
 
 
@@ -152,7 +153,7 @@ public class TrabalhoController {
 		storageService.delete(trabalho.getArquivo().getId());
 
 		redirectAttributes.addFlashAttribute("info", "Trabalho removido com sucesso!");
-		return "redirect:/evento/" + evento.getId() + "/submissoes";
+		return "redirect:/evento/" + GetEvento.getId(evento) + "/submissoes";
 	}
 
 	// OK

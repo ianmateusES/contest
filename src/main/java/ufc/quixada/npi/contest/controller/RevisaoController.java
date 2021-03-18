@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ufc.quixada.npi.contest.model.*;
 import ufc.quixada.npi.contest.service.*;
 import ufc.quixada.npi.contest.util.Constants;
+import ufc.quixada.npi.contest.util.GetEvento;
 import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 import ufc.quixada.npi.contest.util.RevisaoJSON;
 
@@ -69,7 +70,7 @@ public class RevisaoController {
 		trabalhoService.alocarRevisores(trabalho, revisores);
 		redirectAttributes.addFlashAttribute("info", "Revisor(es) alocado(s) com sucesso");
 		redirectAttributes.addFlashAttribute("tab", "revisor");
-		return "redirect:/evento/" + trabalho.getEvento().getId() + "/revisoes";
+		return "redirect:/evento/" + GetEvento.getId(trabalho.getEvento()) + "/revisoes";
 	}
 
 	// OK
@@ -83,7 +84,7 @@ public class RevisaoController {
 		revisaoService.excluir(revisao);
 		redirectAttributes.addFlashAttribute("info", "Revisor excluído com sucesso");
 		redirectAttributes.addFlashAttribute("tab", "revisao");
-		return "redirect:/evento/" + evento.getId() + "/revisoes";
+		return "redirect:/evento/" + GetEvento.getId(evento) + "/revisoes";
 	}
 
 	// OK
