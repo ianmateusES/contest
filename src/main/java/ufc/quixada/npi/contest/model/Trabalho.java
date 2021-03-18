@@ -284,27 +284,9 @@ public class Trabalho implements Comparable<Trabalho> {
 	}
 
 	public boolean isAutorOuCoautor() {
-		Long idPessoaLogada = PessoaLogadaUtil.pessoaLogada().getId();
+		Pessoa pessoaLogada = PessoaLogadaUtil.pessoaLogada();
 
-		return (checkIsAutor(idPessoaLogada) || checkIsCoautor(idPessoaLogada));
-	}
-
-	public boolean checkIsAutor(Long idPessoaLogada) {
-		if (idPessoaLogada.equals(autor.getId())) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkIsCoautor(Long idPessoaLogada) {
-		if (null != coautores && !coautores.isEmpty()) {
-			for (Pessoa pessoa : coautores) {
-				if (idPessoaLogada.equals(pessoa.getId())) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return (isAutor(pessoaLogada) || isCoautor(pessoaLogada));
 	}
 
 	public boolean isAutor(Pessoa pessoa) {

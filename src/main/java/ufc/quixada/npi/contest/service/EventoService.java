@@ -8,6 +8,7 @@ import ufc.quixada.npi.contest.model.*;
 import ufc.quixada.npi.contest.repository.EventoRepository;
 import ufc.quixada.npi.contest.repository.TrabalhoRepository;
 import ufc.quixada.npi.contest.util.GetEvento;
+import ufc.quixada.npi.contest.util.GetPessoa;
 import ufc.quixada.npi.contest.validator.ContestException;
 
 import java.util.ArrayList;
@@ -232,10 +233,10 @@ public class EventoService {
 
 	public void excluirRevisor(Evento evento, Pessoa pessoa) {
 
-		boolean x = trabalhoRepository.existTrablhoAlocado(GetEvento.getId(evento), pessoa.getId());
+		boolean x = trabalhoRepository.existTrablhoAlocado(GetEvento.getId(evento), GetPessoa.getId(pessoa));
 		
 		if (null != evento.getRevisores() && !x) {
-			evento.getRevisores().removeIf(p -> p.getId() == pessoa.getId());
+			evento.getRevisores().removeIf(p -> p == pessoa);
 			try {
 				adicionarOuAtualizarEvento(evento);
 			} catch (ContestException e) {
