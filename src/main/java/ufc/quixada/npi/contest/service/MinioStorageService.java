@@ -43,7 +43,7 @@ public class MinioStorageService implements StorageService {
 		Arquivo arquivo = arquivoRepository.save(new Arquivo(file.getOriginalFilename(), file.getContentType()));
 
 		try {
-			minioClient.putObject(bucket, String.valueOf(arquivo.getId()), file.getInputStream(), file.getSize(), null,
+			minioClient.putObject(bucket, String.valueOf(getIdArquivo(arquivo)), file.getInputStream(), file.getSize(), null,
 					null, file.getContentType());
 		} catch (InvalidBucketNameException | NoSuchAlgorithmException | IOException | InvalidKeyException
 				| NoResponseException | XmlPullParserException | ErrorResponseException | InternalException
@@ -60,7 +60,7 @@ public class MinioStorageService implements StorageService {
 		Arquivo arquivo = arquivoRepository.getOne(arquivoId);
 
 		try {
-			arquivo.setConteudo(minioClient.getObject(bucket, String.valueOf(arquivo.getId())));
+			arquivo.setConteudo(minioClient.getObject(bucket, String.valueOf(getIdArquivo(arquivo))));
 		} catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException
 				| InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException
 				| InternalException | InvalidArgumentException | InvalidResponseException e) {
@@ -84,7 +84,7 @@ public class MinioStorageService implements StorageService {
 		arquivoRepository.save(arquivo);
 
 		try {
-			minioClient.putObject(bucket, String.valueOf(arquivo.getId()), file.getInputStream(), file.getSize(), null,
+			minioClient.putObject(bucket, String.valueOf(getIdArquivo(arquivo)), file.getInputStream(), file.getSize(), null,
 					null, file.getContentType());
 		} catch (InvalidBucketNameException | NoSuchAlgorithmException | IOException | InvalidKeyException
 				| NoResponseException | XmlPullParserException | ErrorResponseException | InternalException
@@ -106,12 +106,16 @@ public class MinioStorageService implements StorageService {
 		arquivoRepository.delete(arquivo);
 
 		try {
-			minioClient.removeObject(bucket, String.valueOf(arquivo.getId()));
+			minioClient.removeObject(bucket, String.valueOf(getIdArquivo(arquivo)));
 		} catch (InvalidKeyException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException
 				| NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException
 				| InvalidResponseException | IOException | XmlPullParserException e) {
 			throw new StorageException(messsagemService.getMessage("FALHA_UPLOAD_ARQUIVO"));
 		}
+	}
+	
+	private Integer getIdArquivo(Arquivo arquivo) {
+		return arquivo.getId();
 	}
 
 }
