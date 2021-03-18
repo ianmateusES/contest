@@ -7,4 +7,8 @@ public class GetPessoa {
 		return pessoa.getId();
 	}
 	
+	public static String getEmail(Pessoa pessoa) {
+		return pessoa.getEmail();
+	}
+	
 }
