@@ -110,10 +110,16 @@ public class CertificadoController {
 		final File file = new File(nomeDocumento + ".ods");
 		SpreadSheet.createEmpty(modelo).saveAs(file);
 
-		response.setContentType("application/ods");
-		response.setHeader("Content-Disposition", "attachment; filename = " + nomeDocumento + ".ods");
+		response = estruturaResponse(response, nomeDocumento);
+		
 		InputStream is = new FileInputStream(file);
 		IOUtils.copy(is, response.getOutputStream());
 		response.flushBuffer();
+	}
+	
+	private HttpServletResponse estruturaResponse(HttpServletResponse response, String nomeDocumento) {
+		response.setContentType("application/ods");
+		response.setHeader("Content-Disposition", "attachment; filename = " + nomeDocumento + ".ods");
+		return response;
 	}
 }

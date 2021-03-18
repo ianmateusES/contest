@@ -58,13 +58,36 @@ public class RestController {
 
     @PreAuthorize("#trabalho.evento.isOrganizador(authentication.principal) || #trabalho.sessao.isReponsavel(authentication.principal)")
     @RequestMapping("/apresentacao/{idTrabalho}/{status}")
-    public void informarApresentacao(@PathVariable("idTrabalho") Trabalho trabalho, @PathVariable("status") boolean status, Authentication auth) {
-        if (trabalho != null) {
-            trabalho.setResponsavelApresentacao((Pessoa)auth.getPrincipal());
-            trabalho.setDataApresentacao(new Date());
-            trabalho.setStatusApresentacao(status);
-            trabalhoService.atualizar(trabalho);
+    public void informarApresentacao(@PathVariable("idTrabalho") Trabalho trabalho, @PathVariable("status") boolean status, 
+    		Authentication auth) {
+        if (trabalho == null) {
+            return;
         }
+     
+        trabalhoService.atualizar(infoTrabalho(trabalho, (Pessoa) auth.getPrincipal(), status));
+    }
+    
+    private Trabalho infoTrabalho(Trabalho trabalho, Pessoa responsavel, boolean status) {
+    	trabalho = resoponsavelApresentacao(trabalho, responsavel);
+    	trabalho = dateApresentacao(trabalho);
+    	trabalho = statusApresentacao(trabalho, status);
+    	
+        return trabalho;
+    }
+    
+    private Trabalho resoponsavelApresentacao(Trabalho trabalho, Pessoa responsavel) {
+    	trabalho.setResponsavelApresentacao(responsavel);
+    	return trabalho;
+    }
+    
+    private Trabalho dateApresentacao(Trabalho trabalho) {
+    	trabalho.setDataApresentacao(new Date());
+    	return trabalho;
+    }
+    
+    private Trabalho statusApresentacao(Trabalho trabalho, boolean status) {
+    	trabalho.setStatusApresentacao(status);
+    	return trabalho;
     }
 
 }

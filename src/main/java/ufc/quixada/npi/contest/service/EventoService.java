@@ -49,14 +49,28 @@ public class EventoService {
 	}
 
 	public void adicionarOuAtualizarEvento(Evento evento) throws ContestException {
+		periodoSubimissao(evento);
+		prazoNotificao(evento);
+		cameraReady(evento);
+		
+		eventoRepository.save(evento);
+	}
+	
+	public void periodoSubimissao(Evento evento) throws ContestException {
 		if (evento.getTerminoSubmissao().before(evento.getInicioSubmissao())){
-			throw new ContestException("O tÃ©rmino da submissÃ£o deve ser posterior ao inÃ­cio da submissÃ£o");
-		} else if (!evento.getPrazoNotificacao().after(evento.getTerminoSubmissao())) {
-			throw new ContestException("O prazo de notificaÃ§Ã£o deve ser posterior ao tÃ©rmino de submissÃ£o");
-		} else if (!evento.getCameraReady().after(evento.getPrazoNotificacao())) {
-			throw new ContestException("O camera ready deve ser posterior ao prazo de notificaÃ§Ã£o");
-		} else {
-			eventoRepository.save(evento);
+			throw new ContestException("O término da submissão deve ser posterior ao início da submissão");
+		}
+	}
+	
+	public void prazoNotificao(Evento evento) throws ContestException {
+		if (!evento.getPrazoNotificacao().after(evento.getTerminoSubmissao())) {
+			throw new ContestException("O prazo de notificação deve ser posterior ao término de submissão");
+		}
+	}
+	
+	public void cameraReady(Evento evento) throws ContestException {
+		if (!evento.getCameraReady().after(evento.getPrazoNotificacao())) {
+			throw new ContestException("O camera ready deve ser posterior ao prazo de notificação");
 		}
 	}
 
@@ -160,8 +174,9 @@ public class EventoService {
 	}
 
 	public boolean notificarPessoaAoAddTrabalho(Evento evento, String email, String corpo) {
-		String assunto = messageService.getMessage(TITULO_EMAIL_ORGANIZADOR) + " " + evento.getNome();
-		String titulo = "[CONTEST] Convite para o Evento: " + evento.getNome();
+		String nameEvento = evento.getNome();
+		String assunto = messageService.getMessage(TITULO_EMAIL_ORGANIZADOR) + " " + nameEvento;
+		String titulo = "[CONTEST] Convite para o Evento: " + nameEvento;
 
 		return emailService.enviarEmail(titulo, assunto, email, corpo);
 	}
@@ -185,8 +200,9 @@ public class EventoService {
 	}
 
 	public void excluirOrganizador(Evento evento, Pessoa pessoa) {
-		if (null != evento.getOrganizadores()) {
-			evento.getOrganizadores().removeIf(p -> p.getId() == pessoa.getId());
+		List<Pessoa> organizadores = evento.getOrganizadores();
+		if (null != organizadores) {
+			organizadores.removeIf(p -> p == pessoa);
 			try {
 				adicionarOuAtualizarEvento(evento);
 			} catch (ContestException e) {

@@ -51,9 +51,27 @@ public class EnviarEmailService {
 
 	private SimpleMailMessage constructMail(String assunto, String corpo, String destinatario) {
 		SimpleMailMessage email = new SimpleMailMessage();
+		setSubject(email, assunto);
+		setText(email, corpo + "\n\n\nMensagem enviada automaticamente. Por favor, n„o responder." + "\nEquipe Contest");
+		setTo(email, destinatario);
+		setFrom(email);
+		return email;
+	}
+	
+	private SimpleMailMessage setSubject(SimpleMailMessage email, String assunto) {
 		email.setSubject(assunto);
-		email.setText(corpo + "\n\n\nMensagem enviada automaticamente. Por favor, n√£o responder." + "\nEquipe Contest");
+		return email;
+	}
+	
+	private SimpleMailMessage setText(SimpleMailMessage email, String corpo) {
+		email.setText(corpo + "\n\n\nMensagem enviada automaticamente. Por favor, n„o responder." + "\nEquipe Contest");
+		return email;
+	}
+	private SimpleMailMessage setTo(SimpleMailMessage email, String destinatario) {
 		email.setTo(destinatario);
+		return email;
+	}
+	private SimpleMailMessage setFrom(SimpleMailMessage email) {
 		email.setFrom(from);
 		return email;
 	}

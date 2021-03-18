@@ -332,11 +332,19 @@ public class EventoController {
 	public String indexAtividades(Model model, @PathVariable("eventoId") Evento evento) {
 		model.addAttribute(EVENTO, evento);
 		List<Atividade> atividades = atividadeService.getAtividadePorEvento(evento.getId());
-		model.addAttribute("atividades", atividades);
-		model.addAttribute("participacoes", atividadeService.getAtividadePorParticipacao(PessoaLogadaUtil.pessoaLogada()));
-		model.addAttribute("participantes", atividadeService.getParticipantes(evento));
+		
+		model = construcaoModel(model, atividades, evento);
+		
 		return "atividade/listagem-atividades";
 
+	}
+	
+	private Model construcaoModel(Model model, List<Atividade> atividades, Evento evento) {
+		model.addAttribute("atividades", atividades);
+		model.addAttribute("participacoes", atividadeService.getAtividadePorParticipacao(PessoaLogadaUtil.pessoaLogada()));
+		model.addAttribute("participantes",  atividadeService.getParticipantes(evento));
+		
+		return model;
 	}
 
     // OK

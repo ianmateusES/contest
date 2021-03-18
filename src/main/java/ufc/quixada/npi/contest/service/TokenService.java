@@ -36,29 +36,42 @@ public class TokenService {
 	}
 	
 	public Token novoToken(Pessoa pessoa, String acao) throws IllegalArgumentException{
-		Token token = new Token();
-		token.setPessoa(pessoa);
+		Token token = criarToken(pessoa);
 		
 		switch(acao){
 		case Constants.ACAO_COMPLETAR_CADASTRO:
-			token.setAcao(Constants.ACAO_COMPLETAR_CADASTRO);
+			setAcao(token, Constants.ACAO_COMPLETAR_CADASTRO);
 			break;
 		case Constants.ACAO_RECUPERAR_SENHA:
-			token.setAcao(Constants.ACAO_RECUPERAR_SENHA);
+			setAcao(token, Constants.ACAO_RECUPERAR_SENHA);
 			break;
 		default:
 			throw new IllegalArgumentException("Acao não existente para geração do token.");
 		}
 		
+		salveToken(token);
 		
+		return token;
+		
+	}
+	
+	private Token criarToken(Pessoa pessoa) {
+		Token token = new Token();
+		token.setPessoa(pessoa);
+		return token;
+	}
+	
+	private Token setAcao(Token token, String constants) {
+		token.setAcao(constants);
+		return token;
+	}
+	
+	private void salveToken(Token token) {
 		do {
 			token.setToken(UUID.randomUUID().toString());
 		} while (this.existe(token.getToken()));
 		
 		this.salvar(token);
-		
-		return token;
-		
 	}
 
 }
