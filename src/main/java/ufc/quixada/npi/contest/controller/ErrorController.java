@@ -30,17 +30,22 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 				return "/error/erro";
 		}
     }
+	
 	public HttpStatus getStatus(HttpServletRequest request) {
 		Integer statusCode = (Integer) request
 				.getAttribute("javax.servlet.error.status_code");
 		if (statusCode == null) {
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return errorInterServer();
 		}
 		try {
 			return HttpStatus.valueOf(statusCode);
 		}
 		catch (Exception ex) {
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return errorInterServer();
 		}
+	}
+	
+	private HttpStatus errorInterServer() {
+		return HttpStatus.INTERNAL_SERVER_ERROR;
 	}
 }

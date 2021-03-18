@@ -21,25 +21,25 @@ public class TrilhaService {
 
 	@Autowired
 	private EventoRepository eventoRepository;
-
+	
 	public void adicionarOuAtualizarTrilha(Evento evento, Trilha trilha) {
-		trilha(evento, trilha);
-		if (trilha != null && !trilha.getNome().isEmpty()) {
-			if (!exists(trilha.getNome(), evento.getId())) {
-				trilhaRepository.save(trilha);
-			}
-
+		if (validacaoTrilha(evento, trilha)) {
+			trilha.setEvento(evento);
+		}
+		
+		if (validacaoTrilha(evento, trilha)) {
+			trilhaRepository.save(trilha);
 		}
 	}
-
-	private void trilha(Evento evento, Trilha trilha) {
-		if (trilha != null && !trilha.getNome().isEmpty()) {
-			if (!exists(trilha.getNome(), evento.getId())) { // aqui acusa ser long method, 
-															 // porém a refatoração da ferramenta
-															 // apenas mudou o if para uma outra classe
-				trilha.setEvento(evento);
+	
+	private boolean validacaoTrilha(Evento evento, Trilha trilha) {
+		String nome = trilha.getNome();
+		if (trilha != null && !nome.isEmpty()) {
+			if (!exists(nome, evento.getId())) {
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public List<Trilha> buscarTrilhas(Long id) {

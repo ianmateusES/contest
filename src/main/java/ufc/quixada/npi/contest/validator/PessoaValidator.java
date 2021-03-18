@@ -29,15 +29,23 @@ public class PessoaValidator implements Validator{
 	public void validate(Object target, Errors errors) {
 		Pessoa pessoa = (Pessoa) target;
 		if(pessoa != null){
-			if(pessoa.getEmail() == null){
+			if(getEmail(pessoa) == null){
 				errors.rejectValue(EMAIL, EMAIL_NULL , messageService.getMessage(EMAIL_NULL));
 			}
-			if(pessoa.getNome() == null){
+			if(getNome(pessoa) == null){
 				errors.rejectValue(NOME, NOME_NULL , messageService.getMessage(NOME_NULL));
 			}
 		}else{
 			errors.rejectValue(null, PESSOA_NULL , messageService.getMessage(PESSOA_INVALIDA));
 		}
+	}
+	
+	private String getEmail(Pessoa pessoa) {
+		return pessoa.getEmail();
+	}
+	
+	private String getNome(Pessoa pessoa) {
+		return pessoa.getEmail();
 	}
 
 }

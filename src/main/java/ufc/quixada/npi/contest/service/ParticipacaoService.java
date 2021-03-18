@@ -37,32 +37,99 @@ public class ParticipacaoService {
 
     public void registrarParticipacao(Atividade atividade, Pessoa participante, Pessoa responsavel) throws ContestException {
         if(atividade == null) {
-            throw new ContestException("Atividade n√£o encontrada!");
+            throw new ContestException("Atividade n„o encontrada!");
         }
+        
+        verificaÁ„oAtividadeParticipante(atividade, participante);
 
-        if (participacaoRepository.findByAtividadeAndParticipante(atividade, participante) != null) {
-            throw new ContestException("J√° existe inscri√ß√£o para esta atividade!");
-        }
+        participacoesConcomitantes(participante, atividade.getInicio(), atividade.getTermino());
 
-        List<Participacao> participacoesConcomitantes = participacaoRepository.findParticipacoesConcomitantesByParticipante(participante, atividade.getInicio(), atividade.getTermino());
-        if(participacoesConcomitantes != null && !participacoesConcomitantes.isEmpty()) {
-            throw new ContestException("Foram encontradas participa√ß√µes j√° registradas em atividades no mesmo hor√°rio!");
-        }
-
-        Date dataHoraAtual = new Date();
-        if (!atividade.getEvento().isOrganizador(responsavel)) {
-            if (((atividade.getInicio() != null && dataHoraAtual.before(atividade.getInicio()) || (atividade.getTermino() != null && dataHoraAtual.after(atividade.getTermino()))) && !atividade.isAtivo())) {
-                throw new ContestException("A atividade n√£o est√° no per√≠odo ativo!");
-            }
-        }
-
-        Participacao participacao = new Participacao();
-        participacao.setAtividade(atividade);
-        participacao.setValida(true);
-        participacao.setData(new Date());
-        participacao.setResponsavel(responsavel);
-        participacao.setParticipante(participante);
+        validacaoDataHoraAtividade(getDateInicioAtividade(atividade),
+        		getDateTerminoAtividade(atividade),
+        		getEventoTerminoAtividade(atividade),
+        		isAtivoTerminoAtividade(atividade),
+        		responsavel);
+        
+        Participacao participacao = construcaoParticipante(atividade, participante, responsavel);
+        
         participacaoRepository.save(participacao);
+    }
+    
+    private void verificaÁ„oAtividadeParticipante(Atividade atividade, Pessoa participante) throws ContestException {
+    	if (participacaoRepository.findByAtividadeAndParticipante(atividade, participante) != null) {
+            throw new ContestException("J· existe inscriÁ„o para esta atividade!");
+        }
+    }
+    
+    private void participacoesConcomitantes(Pessoa participante, Date inicio, Date termino) throws ContestException {
+    	List<Participacao> participacoesConcomitantes = participacaoRepository.findParticipacoesConcomitantesByParticipante(participante, 
+    			inicio, termino);
+        if(participacoesConcomitantes != null && !participacoesConcomitantes.isEmpty()) {
+            throw new ContestException("Foram encontradas participaÁıes j· registradas em atividades no mesmo hor·rio!");
+        }
+    }
+    
+    private void validacaoDataHoraAtividade(Date inicio, Date termino, Evento evento, boolean ativo, Pessoa responsavel) throws ContestException {
+    	 Date dataHoraAtual = new Date();
+         if (!evento.isOrganizador(responsavel)) {
+             if (((inicio != null && dataHoraAtual.before(inicio) || 
+             		(termino != null && dataHoraAtual.after(termino))) && !ativo)) {
+                 throw new ContestException("A atividade n„o est· no perÌodo ativo!");
+             }
+         }
+    }
+    
+    private Date getDateInicioAtividade(Atividade atividade) {
+    	return atividade.getInicio();
+    }
+    
+    private Date getDateTerminoAtividade(Atividade atividade) {
+    	return atividade.getTermino();
+    }
+    
+    private Evento getEventoTerminoAtividade(Atividade atividade) {
+    	return atividade.getEvento();
+    }
+    
+    private boolean isAtivoTerminoAtividade(Atividade atividade) {
+    	return atividade.isAtivo();
+    }
+    
+    private Participacao construcaoParticipante(Atividade atividade, Pessoa participante, Pessoa responsavel) {
+    	Participacao participacao = new Participacao();
+    	
+    	participacao = setAtividadeParticipante(participacao, atividade);
+    	participacao = setValidaParticipante(participacao, true);
+    	participacao = setDataParticipante(participacao, new Date());
+    	participacao = setResponsavelParticipante(participacao, responsavel);
+    	participacao = setParticipante(participacao, participante);
+    	
+    	return participacao;
+    }
+    
+    private Participacao setAtividadeParticipante(Participacao participacao, Atividade atividade) {
+    	participacao.setAtividade(atividade);
+    	return participacao;
+    }
+    
+    private Participacao setValidaParticipante(Participacao participacao, boolean valida) {
+    	participacao.setValida(true);
+    	return participacao;
+    }
+    
+    private Participacao setDataParticipante(Participacao participacao, Date date) {
+    	participacao.setData(date);
+    	return participacao;
+    }
+    
+    private Participacao setResponsavelParticipante(Participacao participacao, Pessoa responsavel) {
+    	participacao.setResponsavel(responsavel);
+    	return participacao;
+    }
+    
+    private Participacao setParticipante(Participacao participacao, Pessoa participante) {
+    	participacao.setParticipante(participante);
+    	return participacao;
     }
 
     public void atualizar(Participacao participacao) {

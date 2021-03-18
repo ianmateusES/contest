@@ -121,10 +121,15 @@ public class AutorControllerProduct {
 	public Submissao configuraSubmissao(Submissao submissao, Evento evento) {
 		submissao.setDataSubmissao(new Date(System.currentTimeMillis()));
 		if (evento.isPeriodoSubmissao()) {
-			submissao.setTipoSubmissao(TipoSubmissao.PARCIAL);
+			submissao = setTipoSubmissao(submissao, TipoSubmissao.PARCIAL);
 		} else if (evento.isPeriodoFinal()) {
-			submissao.setTipoSubmissao(TipoSubmissao.FINAL);
+			submissao = setTipoSubmissao(submissao, TipoSubmissao.FINAL);
 		}
+		return submissao;
+	}
+	
+	private Submissao setTipoSubmissao(Submissao submissao, TipoSubmissao tipoSubmissao) {
+		submissao.setTipoSubmissao(tipoSubmissao);
 		return submissao;
 	}
 

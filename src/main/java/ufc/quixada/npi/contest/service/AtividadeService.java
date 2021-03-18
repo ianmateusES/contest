@@ -28,9 +28,13 @@ public class AtividadeService {
 	}
 
 	public void gerarCodigo(Atividade atividade) {
-		atividade.setCodigo(atividade.getEvento().getCodigo().toUpperCase()
+		atividade.setCodigo(getCodigoEvento(atividade.getEvento()).toUpperCase()
 				+ UUID.randomUUID().toString().substring(0, 8).toUpperCase());
 		adicionarOuAtualizar(atividade);
+	}
+	
+	private String getCodigoEvento(Evento evento) {
+		return evento.getCodigo();
 	}
 
 	public List<Atividade> getAtividadePorEvento(Long idEvento) {

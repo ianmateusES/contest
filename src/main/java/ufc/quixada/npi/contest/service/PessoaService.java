@@ -24,13 +24,22 @@ public class PessoaService {
 	private MessageService messsagemService;
 	
 	public void addOrUpdate(Pessoa pessoa) throws ContestException {
-		List<Pessoa> pessoas = pessoaRepository.findByCpfOrEmailAndIdIsNot(pessoa.getCpf(), pessoa.getEmail(), pessoa.getId() == null ? 0 : pessoa.getId());
+		Long idPessoa = pessoa.getId();
+		List<Pessoa> pessoas = pessoaRepository.findByCpfOrEmailAndIdIsNot(getCpf(pessoa), getEmail(pessoa), idPessoa == null ? 0 : idPessoa);
 
 		if(!pessoas.isEmpty()) {
 			throw new ContestException(messsagemService.getMessage("ERRO_USUARIO_EXISTENTE"));
 		}
 
 		pessoaRepository.save(pessoa);
+	}
+	
+	private String getCpf(Pessoa pessoa) {
+		return pessoa.getCpf();
+	}
+	
+	private String getEmail(Pessoa pessoa) {
+		return pessoa.getCpf();
 	}
 
 	public List<Pessoa> list() {

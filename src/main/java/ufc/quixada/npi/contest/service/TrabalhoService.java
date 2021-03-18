@@ -17,6 +17,11 @@ import java.util.List;
 
 @Service
 public class TrabalhoService {
+	
+	private Avaliacao APROVADO = Avaliacao.APROVADO;
+	private Avaliacao RESSALVAS = Avaliacao.RESSALVAS;
+	private Avaliacao REPROVADO = Avaliacao.REPROVADO;
+	private Avaliacao NAO_REVISADO = Avaliacao.NAO_REVISADO;
 
 	@Autowired
 	private TrabalhoRepository trabalhoRepository;
@@ -239,7 +244,7 @@ public class TrabalhoService {
 
 	// OK
 	public List<Trabalho> getTrabalhosRevisados(Evento evento) {
-		return trabalhoRepository.getTrabalhosByAvaliacao(evento, Arrays.asList(Avaliacao.APROVADO, Avaliacao.REPROVADO, Avaliacao.RESSALVAS));
+		return trabalhoRepository.getTrabalhosByAvaliacao(evento, Arrays.asList(APROVADO, REPROVADO, RESSALVAS));
 	}
 
 	// OK
