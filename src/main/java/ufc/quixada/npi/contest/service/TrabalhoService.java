@@ -147,7 +147,7 @@ public class TrabalhoService {
 
 		return Avaliacao.MODERACAO;
 	}
-
+/*
 	public List<String> pegarConteudo(Trabalho trabalho) {
 
 		String conteudoAux;
@@ -159,8 +159,8 @@ public class TrabalhoService {
 		List<Revisao> revisoes = trabalhoProduct.getRevisoes();
 		StringBuilder bld = new StringBuilder();
 		for (Revisao revisao : revisoes) {
-
-			conteudo = revisao.getConteudo().substring(1, revisao.getConteudo().length() - 1);
+			String content = revisao.getConteudo();
+			conteudo = content.substring(1, content.length() - 1);
 			bld.append("REVISOR : " + revisao.getRevisor().getNome().toUpperCase() + " , TRABALHO: "
 					+ trabalho.getId().toString());
 
@@ -168,9 +168,7 @@ public class TrabalhoService {
 				if (conteudo.contains(",")) {
 					conteudoAux = conteudo.substring(0, conteudo.indexOf(','));
 					if (!conteudoAux.contentEquals("comentarios")) {
-						bld.append((" ," + (conteudoAux.replaceAll("\"", " ").replaceAll("_", " ")
-								.replaceAll("avaliacao", "AVALIAÇÃO").replaceAll("OTIMO", "ÓTIMO")
-								.replaceAll("merito", "MÉRITO").replaceAll("relevancia", "RELEVÂNCIA")).toUpperCase()));
+						bld.append((" ," + contentFormat(conteudoAux)));
 						conteudoAux = conteudo.substring(conteudo.indexOf(',') + 1);
 						conteudo = conteudoAux;
 					}
@@ -184,7 +182,13 @@ public class TrabalhoService {
 
 		return resultadoAvaliacoes;
 	}
-
+	
+	private String contentFormat(String conteudo) {
+		return conteudo.replaceAll("\"", " ").replaceAll("_", " ")
+				.replaceAll("avaliacao", "AVALIAÇÃO").replaceAll("OTIMO", "ÓTIMO")
+				.replaceAll("merito", "MÉRITO").replaceAll("relevancia", "RELEVÂNCIA").toUpperCase();
+	}
+*/
 	public List<Trabalho> buscarTodosTrabalhosDaSessao(Long idSessao) {
 		return trabalhoRepository.findTrabalhoBySessaoId(idSessao);
 
