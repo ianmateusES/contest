@@ -108,8 +108,10 @@ public class TrabalhoService {
 		int numeroDeReprovacao = 0;
 		int numeroDeRessalvas = 0;
 		int numeroRevisoes = 0;
-
-		List<Revisao> revisoes = trabalho.getRevisoes();
+		
+		TrabalhoProduct trabalhoProduct = trabalho.getTrabalhoProduct();
+		List<Revisao> revisoes = trabalhoProduct.getRevisoes();
+		// List<Revisao> revisoes = trabalho.getRevisoes();
 
 		if (revisoes != null) {
 			numeroRevisoes = revisoes.size();
@@ -153,8 +155,10 @@ public class TrabalhoService {
 
 		List<String> resultadoAvaliacoes = new ArrayList<>();
 
+		TrabalhoProduct trabalhoProduct = trabalho.getTrabalhoProduct();
+		List<Revisao> revisoes = trabalhoProduct.getRevisoes();
 		StringBuilder bld = new StringBuilder();
-		for (Revisao revisao : trabalho.getRevisoes()) {
+		for (Revisao revisao : revisoes) {
 
 			conteudo = revisao.getConteudo().substring(1, revisao.getConteudo().length() - 1);
 			bld.append("REVISOR : " + revisao.getRevisor().getNome().toUpperCase() + " , TRABALHO: "
@@ -252,7 +256,7 @@ public class TrabalhoService {
 	// OK
 	public void alocarRevisores(Trabalho trabalho, List<Pessoa> revisores) {
 		for (Pessoa pessoa : revisores) {
-			if (trabalho.isRevisor(pessoa)) {
+			if (trabalho.getTrabalhoProduct().isRevisor(pessoa)) {
 				continue;
 			}
 			Revisao revisao = new Revisao();

@@ -87,7 +87,7 @@
 									</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.isBestPaper()}">
+									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.getTrabalhoProduct().isBestPaper()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td th:text="${trabalho.trilha.nome}"></td>
@@ -105,7 +105,7 @@
 									</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.isAprovado()}">
+									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.getTrabalhoProduct().isAprovado()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td th:text="${trabalho.trilha.nome}"></td>
@@ -123,7 +123,7 @@
 										</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.isAprovadoComRessalvas()}">
+									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.getTrabalhoProduct().isAprovadoComRessalvas()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td th:text="${trabalho.trilha.nome}"></td>
@@ -141,7 +141,7 @@
 									</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.isReprovado()}">
+									<tr th:each="trabalho : ${trabalhos}" th:if="${trabalho.getTrabalhoProduct().isReprovado()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td th:text="${trabalho.trilha.nome}"></td>
@@ -160,7 +160,7 @@
 									</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${trabalhos}" th:if="${not trabalho.isRevisado()}">
+									<tr th:each="trabalho : ${trabalhos}" th:if="${not trabalho.getTrabalhoProduct().isRevisado()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td th:text="${trabalho.trilha.nome}"></td>

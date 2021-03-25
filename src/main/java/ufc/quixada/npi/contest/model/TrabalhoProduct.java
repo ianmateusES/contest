@@ -14,6 +14,24 @@ public class TrabalhoProduct {
 	public List<Revisao> getRevisoes() {
 		return revisoes;
 	}
+	
+	public Revisao getRevisao(Pessoa revisor) {
+		for (Revisao revisao : this.revisoes) {
+			if (revisao.getRevisor().equals(revisor)) {
+				return revisao;
+			}
+		}
+		return null;
+	}
+	
+	public boolean isRevisor(Pessoa pessoa) {
+		for (Revisao revisao : this.revisoes) {
+			if (revisao.getRevisor().equals(pessoa)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public void setRevisoes(List<Revisao> revisoes) {
 		this.revisoes = revisoes;
