@@ -35,7 +35,7 @@ import ufc.quixada.npi.contest.util.RevisaoJSON;
 public class RevisaoController {
 
 	private static final String REVISOR_REVISOR_VER_REVISAO = "revisor/revisor_ver_revisao";
-	
+	private static final String[] igoneProperties = { "id", "revisor", "trabalho", "arquivo"};
 
 	@Autowired
 	private EventoService eventoService;
@@ -90,21 +90,34 @@ public class RevisaoController {
 	// OK
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String avaliarTrabalho(Revisao revisaoAtualizada, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+		
 		Revisao revisao = revisaoService.find(revisaoAtualizada.getId());
 		if (!file.isEmpty()) {
-			if (revisao.getArquivo() == null) {
-				Arquivo arquivo = storageService.store(file);
-				revisao.setArquivo(arquivo);
-			} else {
-				storageService.edit(file, revisao.getArquivo().getId());
-			}
+			Arquivo arquivo = updateFile(revisao.getArquivo(), file);
+			revisao.setArquivo(arquivo);
 		}
-
-		String[] igoneProperties = { "id", "revisor", "trabalho", "arquivo"};
+		
 		BeanUtils.copyProperties(revisaoAtualizada, revisao, igoneProperties);
 		revisaoService.addOrUpdate(revisao);
 		redirectAttributes.addFlashAttribute("info", "Revisão realizada com sucesso");
 		return "redirect:/trabalho/" + revisao.getTrabalho().getId();
+	}
+	
+	private Arquivo updateFile(Arquivo arquivo, MultipartFile file) {
+		if (arquivo == null) {
+			return storeArquivo(file);
+		} else {
+			editArquivo(file, arquivo.getId());
+		}
+		return arquivo;
+	}
+	
+	private Arquivo storeArquivo(MultipartFile file) {
+		return storageService.store(file);
+	}
+	
+	private void editArquivo(MultipartFile file, Integer id) {
+		storageService.edit(file, id);
 	}
 
 	@RequestMapping(value = "/{idEvento}/trabalhosRevisao")
@@ -143,22 +156,14 @@ public class RevisaoController {
 	public String revisarTrabalho(HttpSession session, Model model, @PathVariable("idTrabalho") Long idTrabalho,
 			RedirectAttributes redirect) {
 
-		Trabalho trabalho = trabalhoService.getTrabalhoById(Long.valueOf(idTrabalho));
-		Evento evento;
+		Trabalho trabalho = trabalhoService.getTrabalhoById(idTrabalho);
 		Pessoa revisor = PessoaLogadaUtil.pessoaLogada();
 		
-		
 		if (trabalho != null) {
-			evento = trabalho.getEvento();
-			if (!evento.isPeriodoRevisao()) {
-				redirect.addFlashAttribute("periodoRevisaoError", messageService.getMessage(FORA_PERIODO_REVISAO));				
-				return "redirect:/eventoOrganizador";
-			} else if (revisaoService.isTrabalhoRevisadoPeloRevisor(trabalho.getId(), revisor.getId())) {
-				return TRABALHO_REVISAO_PELO_REVISOR;
-			}
-		} else {
-			return "redirect:/error";
+			return revisionRevisor(trabalho.getEvento(), idTrabalho, redirect, revisor.getId());
 		}
+		
+		return "redirect:/error";
 
 		/**
 		 * Alterar verificação de acordo com o novo modelo de dados
@@ -175,10 +180,17 @@ public class RevisaoController {
 			return REVISOR_AVALIAR_TRABALHO;
 		}
 		 */
-		
+	}
+	
+	private String revisionRevisor(Evento evento, Long idTrabalho,  RedirectAttributes redirect, Long idRevisor) {
+		if (!evento.isPeriodoRevisao()) {
+			redirect.addFlashAttribute("periodoRevisaoError", messageService.getMessage(FORA_PERIODO_REVISAO));				
+			return "redirect:/eventoOrganizador";
+		} else if (revisaoService.isTrabalhoRevisadoPeloRevisor(idTrabalho, idRevisor)) {
+			return TRABALHO_REVISAO_PELO_REVISOR;
+		}
 		
 		return REVISOR_SEM_PERMISSAO;
-
 	}
 	
 	@RequestMapping(value = "/{idTrabalho}/revisao", method = RequestMethod.GET)
