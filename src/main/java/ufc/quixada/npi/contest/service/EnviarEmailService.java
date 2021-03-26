@@ -96,19 +96,34 @@ public class EnviarEmailService {
 
 	public String resetarSenhaEmail(@PathVariable("token") Token token, @RequestParam String senha,
 			@RequestParam String senhaConfirma, RedirectAttributes redirectAttributes) {
-		if (senha.equals(senhaConfirma)) {
+		if (validationPassword(senha, senhaConfirma)) {
 			Pessoa pessoa = token.getPessoa();
-			String password = pessoaService.encodePassword(senha);
-			pessoa.setPassword(password);
-			try {
-				pessoaService.addOrUpdate(pessoa);
-			} catch (ContestException e) {
-				logger.error(e.getMessage());
-			}
+			pessoa = encodePassword(pessoa, senha);
+			
+			updateUser(pessoa);
+			
 			tokenService.deletar(token);
 			redirectAttributes.addFlashAttribute("senhaRedefinida", true);
 		}
 		return "";
+	}
+	
+	private boolean validationPassword(String password, String passwordConfirm) {
+		return password.equals(passwordConfirm);
+	}
+	
+	private Pessoa encodePassword(Pessoa pessoa, String password) {
+		String passwordEncode = pessoaService.encodePassword(password);
+		pessoa.setPassword(passwordEncode);
+		return pessoa;
+	}
+	
+	private void updateUser(Pessoa pessoa) {
+		try {
+			pessoaService.addOrUpdate(pessoa);
+		} catch (ContestException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	public String esqueciSenhaEmail(@RequestParam String email, RedirectAttributes redirectAttributes, String url) {
