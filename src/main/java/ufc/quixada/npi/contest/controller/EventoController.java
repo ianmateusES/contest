@@ -196,7 +196,10 @@ public class EventoController {
 	@RequestMapping(value = "/{eventoId}/modalidade-submissao", method = RequestMethod.POST)
 	public String adicionarModalidadeSubmissao(Model model, @PathVariable("eventoId") Evento evento,
 			@RequestParam("nome") String nomeModalidade, RedirectAttributes redirectAttributes) {
-		evento.addModalidadeSubmissao(new Modalidade(nomeModalidade));
+		List<Modalidade> modalidadeEvento = evento.getModalidadesSubmissao();
+		modalidadeEvento.add(new Modalidade(nomeModalidade));
+		evento.setModalidadesSubmissao(modalidadeEvento);
+		// evento.addModalidadeSubmissao(new Modalidade(nomeModalidade));
 		try {
 			eventoService.adicionarOuAtualizarEvento(evento);
             redirectAttributes.addFlashAttribute("info", "Modalidade de submissão adicionada com sucesso");
@@ -212,7 +215,10 @@ public class EventoController {
 	@RequestMapping(value = "/{eventoId}/excluir-modalidade-submissao/{modalidadeId}")
 	public String excluirModalidadeSubmissao(Model model, @PathVariable("eventoId") Evento evento,
 			@PathVariable("modalidadeId") Modalidade modalidade, RedirectAttributes redirectAttributes) {
-		evento.removeModalidadeSubmissao(modalidade);
+		List<Modalidade> modalidadeEvento = evento.getModalidadesSubmissao();
+		modalidadeEvento.remove(modalidade);
+		evento.setModalidadesSubmissao(modalidadeEvento);
+		//evento.removeModalidadeSubmissao(modalidade);
 		try {
 			eventoService.adicionarOuAtualizarEvento(evento);
 			redirectAttributes.addFlashAttribute("info", "Modalidade de submissão excluída com sucesso");
@@ -228,7 +234,10 @@ public class EventoController {
 	@RequestMapping(value = "/{eventoId}/modalidade-apresentacao", method = RequestMethod.POST)
 	public String adicionarModalidadeApresentacao(Model model, @PathVariable("eventoId") Evento evento,
 											   @RequestParam("nome") String nomeModalidade, RedirectAttributes redirectAttributes) {
-		evento.addModalidadeApresentacao(new Modalidade(nomeModalidade));
+		List<Modalidade> modalidadesApresentacao = evento.getModalidadesApresentacao();
+		modalidadesApresentacao.add(new Modalidade(nomeModalidade));
+		evento.setModalidadesApresentacao(modalidadesApresentacao);
+		//evento.addModalidadeApresentacao(new Modalidade(nomeModalidade));
 		try {
 			eventoService.adicionarOuAtualizarEvento(evento);
 			redirectAttributes.addFlashAttribute("info", "Modalidade de apresentação adicionada com sucesso");
@@ -244,7 +253,10 @@ public class EventoController {
 	@RequestMapping(value = "/{eventoId}/excluir-modalidade-apresentacao/{modalidadeId}")
 	public String excluirModalidadeApresentacao(Model model, @PathVariable("eventoId") Evento evento,
 											 @PathVariable("modalidadeId") Modalidade modalidade, RedirectAttributes redirectAttributes) {
-		evento.removeModalidadeApresentacao(modalidade);
+		List<Modalidade> modalidadesApresentacao = evento.getModalidadesApresentacao();
+		modalidadesApresentacao.remove(modalidade);
+		evento.setModalidadesApresentacao(modalidadesApresentacao);
+		// evento.removeModalidadeApresentacao(modalidade);
 		try {
 			eventoService.adicionarOuAtualizarEvento(evento);
 			redirectAttributes.addFlashAttribute("info", "Modalidade de apresentação excluída com sucesso");

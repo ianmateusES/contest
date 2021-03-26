@@ -1,5 +1,7 @@
 package ufc.quixada.npi.contest.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ufc.quixada.npi.contest.model.Evento;
@@ -20,7 +22,10 @@ public class ModalidadeService {
 	public void adicionarModalidadeSubmissao(Evento evento, String nome) {
 		if (!nome.isEmpty()) {
 			if (!exists(nome, GetEvento.getId(evento))) {
-				evento.addModalidadeSubmissao(new Modalidade(nome));
+				List<Modalidade> modalidadeEvento = evento.getModalidadesSubmissao();
+				modalidadeEvento.add(new Modalidade(nome));
+				evento.setModalidadesSubmissao(modalidadeEvento);
+				//evento.addModalidadeSubmissao(new Modalidade(nome));
 				eventoRepository.save(evento);
 			}
 

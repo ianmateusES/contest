@@ -26,6 +26,9 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import ufc.quixada.npi.contest.util.CalendarioApplication;
+import ufc.quixada.npi.contest.util.ValidacaoPeriodo;
+
 @Entity
 @Table(name = "evento")
 public class Evento {
@@ -103,11 +106,6 @@ public class Evento {
 	public Long getId() {
 		return id;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
 	}
@@ -146,25 +144,6 @@ public class Evento {
 
 	public void setInicioSubmissao(Date inicioSubmissao) {
 		this.inicioSubmissao = inicioSubmissao;
-	}
-
-	public Date getUltimoDiaSubmissaoInicial() {
-		Calendar c = Calendar.getInstance();
-		setTime(c);
-		addCalendario(c, Calendar.DAY_OF_MONTH);
-		return getTimeCalendario(c);
-	}
-	
-	private void setTime(Calendar c) {
-		 c.setTime(terminoSubmissao);
-	}
-	
-	private void addCalendario(Calendar c, int day) {
-		 c.add(day, -1);
-	}
-	
-	private Date getTimeCalendario(Calendar c) {
-		return c.getTime();
 	}
 
 	public Date getCameraReady() {
@@ -223,32 +202,6 @@ public class Evento {
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Evento other = (Evento) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Evento [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", visibilidade=" + visibilidade
-				+ ", estado=" + estado + ", prazoSubmissaoInicial=" + inicioSubmissao + ", prazoSubmissaoFinal="
-				+ cameraReady + ", prazoRevisaoInicial=" + terminoSubmissao + ", prazoRevisaoFinal=" + prazoNotificacao
-				+ ", organizadores=" + organizadores + ", revisores=" + revisores + ", trilhas=" + trilhas
-				+ ", sessoes=" + sessoes + "]";
-	}
-
 	public List<Trilha> getTrilhas() {
 		return trilhas;
 	}
@@ -264,7 +217,12 @@ public class Evento {
 	public List<Modalidade> getModalidadesSubmissao() {
 		return modalidadesSubmissao;
 	}
+	
+	public void setModalidadesSubmissao(List<Modalidade> modalidadeSubmissao) {
+		this.modalidadesSubmissao = modalidadeSubmissao;
+	}
 
+/*
 	public void addModalidadeSubmissao(Modalidade modalidadeSubmissao) {
 		this.modalidadesSubmissao.add(modalidadeSubmissao);
 	}
@@ -272,11 +230,16 @@ public class Evento {
 	public void removeModalidadeSubmissao(Modalidade modalidadeSubmissao) {
 		this.modalidadesSubmissao.remove(modalidadeSubmissao);
 	}
+*/
 
 	public List<Modalidade> getModalidadesApresentacao() {
 		return modalidadesApresentacao;
 	}
 
+	public void setModalidadesApresentacao(List<Modalidade> modalidadeApresentacao) {
+		this.modalidadesApresentacao = modalidadeApresentacao;
+	}
+/*
 	public void addModalidadeApresentacao(Modalidade modalidadeApresentacao) {
 		this.modalidadesApresentacao.add(modalidadeApresentacao);
 	}
@@ -284,82 +247,35 @@ public class Evento {
 	public void removeModalidadeApresentacao(Modalidade modalidadeApresentacao) {
 		this.modalidadesApresentacao.remove(modalidadeApresentacao);
 	}
-
+*/
+	public boolean isPeriodoFinal() {
+		return (CalendarioApplication.equalDateToday(prazoNotificacao) && CalendarioApplication.equalDateToday(cameraReady));
+	}
+	
 	public boolean isPeriodoSubmissao() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			Date hoje = new Date();
-			hoje = formatter.parse(formatter.format(hoje));
-			return !(hoje.before(inicioSubmissao) || hoje.after(terminoSubmissao));
-		} catch (ParseException e) {
-			return false;
-		}
-
+		return ValidacaoPeriodo.isPeriodo(inicioSubmissao, terminoSubmissao);
 	}
 
 	public boolean isPeriodoRevisao() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		try {
-			Date hoje = new Date();
-			hoje = formatter.parse(formatter.format(hoje));
+			Date hoje = ValidacaoPeriodo.formatterDateToday();
 			return !(hoje.after(prazoNotificacao) && !terminoSubmissao.after(hoje));
 		} catch (ParseException e) {
 			return false;
 		}
 	}
-
-	public boolean isPeriodoFinal() {
-		Date dataAtual = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(prazoNotificacao);
-		cal.add(Calendar.DAY_OF_MONTH, 1);
-		Date diaAposRevisaoFinal = cal.getTime();
-		boolean comecaAposRevisaoFinal = (dataAtual.compareTo(diaAposRevisaoFinal) >= 0);
-
-		cal.setTime(cameraReady);
-		cal.add(Calendar.DAY_OF_MONTH, 1);
-		Date diaAposSubmissaoFinal = cal.getTime();
-		boolean terminaNoDiaOuAntesSubissaoFinal = (dataAtual.compareTo(diaAposSubmissaoFinal) <= 0);
-		return (comecaAposRevisaoFinal && terminaNoDiaOuAntesSubissaoFinal);
+	
+	public boolean isPeriodoSubmissaoFinal() {
+		Date termino = CalendarioApplication.getDateCalendario(cameraReady, 1);
+		return ValidacaoPeriodo.isPeriodo(prazoNotificacao, termino);
 	}
 
 	public boolean isAfterRevisao() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			Date hoje = new Date();
-			hoje = formatter.parse(formatter.format(hoje));
-			return hoje.after(prazoNotificacao);
-		} catch (ParseException e) {
-			return false;
-		}
+		return ValidacaoPeriodo.isAfterPeriod(prazoNotificacao);
 	}
 
 	public boolean isAfterSubmissao() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			Date hoje = new Date();
-			hoje = formatter.parse(formatter.format(hoje));
-			return hoje.after(terminoSubmissao);
-		} catch (ParseException e) {
-			return false;
-		}
-	}
-
-	public boolean isPeriodoSubmissaoFinal() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			Date hoje = new Date();
-			hoje = formatter.parse(formatter.format(hoje));
-
-			Calendar c = Calendar.getInstance();
-			c.setTime(cameraReady);
-			c.add(Calendar.DATE, 1);
-			Date termino = c.getTime();
-
-			return (hoje.after(prazoNotificacao) && hoje.before(termino));
-		} catch (ParseException e) {
-			return false;
-		}
+		return ValidacaoPeriodo.isAfterPeriod(terminoSubmissao);
 	}
 
 	public List<Sessao> getSessoes() {

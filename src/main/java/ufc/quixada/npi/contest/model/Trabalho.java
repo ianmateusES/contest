@@ -25,7 +25,7 @@ import ufc.quixada.npi.contest.util.PessoaLogadaUtil;
 @Table(name = "trabalho")
 public class Trabalho implements Comparable<Trabalho> {
 
-	private TrabalhoProduct2 trabalhoProduct2 = new TrabalhoProduct2();
+	private TrabalhoProduct trabalhoProduct = new TrabalhoProduct();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,13 +104,13 @@ public class Trabalho implements Comparable<Trabalho> {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public List<Revisao> getRevisoes() {
-		return trabalhoProduct2.getTrabalhoProduct().getRevisoes();
+	
+	public TrabalhoProduct getTrabalhoProduct() {
+		return this.trabalhoProduct;
 	}
-
-	public void setRevisoes(List<Revisao> revisoes) {
-		trabalhoProduct2.getTrabalhoProduct().setRevisoes(revisoes);
+	
+	public void setTrabalhoProduct(TrabalhoProduct trabalhoProduct) {
+		this.trabalhoProduct = trabalhoProduct;
 	}
 
 	public String getTitulo() {
@@ -242,23 +242,6 @@ public class Trabalho implements Comparable<Trabalho> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Trabalho other = (Trabalho) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-
-	@Override
 	public int compareTo(Trabalho o) {
 		return this.titulo.toUpperCase().compareTo(o.getTitulo().toUpperCase());
 	}
@@ -283,20 +266,6 @@ public class Trabalho implements Comparable<Trabalho> {
 		this.palavrasChave = palavrasChave;
 	}
 
-	public boolean isAutorOuCoautor() {
-		Pessoa pessoaLogada = PessoaLogadaUtil.pessoaLogada();
-
-		return (isAutor(pessoaLogada) || isCoautor(pessoaLogada));
-	}
-
-	public boolean isAutor(Pessoa pessoa) {
-		return this.getAutor().equals(pessoa);
-	}
-
-	public boolean isCoautor(Pessoa pessoa) {
-		return this.coautores != null && this.coautores.contains(pessoa);
-	}
-
 	public boolean getStatusApresentacao() {
 		return statusApresentacao;
 	}
@@ -304,25 +273,34 @@ public class Trabalho implements Comparable<Trabalho> {
 	public void setStatusApresentacao(boolean statusApresentacao) {
 		this.statusApresentacao = statusApresentacao;
 	}
+/*
+	public List<Revisao> getRevisoes() {
+		return trabalhoProduct.getRevisoes();
+	}
 
+
+	public void setRevisoes(List<Revisao> revisoes) {
+		trabalhoProduct.setRevisoes(revisoes);
+	}
+	
 	public boolean isRevisado() {
-		return trabalhoProduct2.getTrabalhoProduct().isRevisado();
+		return trabalhoProduct.isRevisado();
 	}
 
 	public boolean isAprovado() {
-		return trabalhoProduct2.getTrabalhoProduct().isAprovado();
+		return trabalhoProduct.isAprovado();
 	}
 
 	public boolean isReprovado() {
-		return trabalhoProduct2.getTrabalhoProduct().isReprovado();
+		return trabalhoProduct.isReprovado();
 	}
 
 	public boolean isAprovadoComRessalvas() {
-		return trabalhoProduct2.getTrabalhoProduct().isAprovadoComRessalvas();
+		return trabalhoProduct.isAprovadoComRessalvas();
 	}
 
 	public boolean isBestPaper() {
-		return trabalhoProduct2.getTrabalhoProduct().isBestPaper();
+		return trabalhoProduct.isBestPaper();
 	}
 
 	public boolean isAlocadoSessao() {
@@ -330,11 +308,11 @@ public class Trabalho implements Comparable<Trabalho> {
 	}
 
 	public Revisao getRevisao(Pessoa revisor) {
-		return trabalhoProduct2.getRevisao(revisor);
+		return trabalhoProduct.getRevisao(revisor);
 	}
 
 	public boolean isRevisor(Pessoa pessoa) {
-		return trabalhoProduct2.isRevisor(pessoa);
+		return trabalhoProduct.isRevisor(pessoa);
 	}
 
 	public String getCoautoresInString() {
@@ -353,14 +331,9 @@ public class Trabalho implements Comparable<Trabalho> {
 	}
 
 	public Avaliacao getResultado() {
-		return trabalhoProduct2.getTrabalhoProduct().getResultado();
+		return trabalhoProduct.getResultado();
 	}
-
-	public boolean canViewFile(Pessoa usuario) {
-		return this.getAutor().equals(usuario) || this.isCoautor(usuario) || trabalhoProduct2.isRevisor(usuario)
-				|| this.getEvento().isOrganizador(usuario)
-				|| (this.getSessao() != null && usuario.equals(this.getSessao().getResponsavel()));
-	}
+*/
 
 	public List<Pessoa> getBolsistas() {
 		return bolsistas;
@@ -370,8 +343,28 @@ public class Trabalho implements Comparable<Trabalho> {
 		this.bolsistas = bolsistas;
 	}
 
+	public boolean isAutorOuCoautor() {
+		Pessoa pessoaLogada = PessoaLogadaUtil.pessoaLogada();
+
+		return (isAutor(pessoaLogada) || isCoautor(pessoaLogada));
+	}
+
+	public boolean isAutor(Pessoa pessoa) {
+		return this.autor.equals(pessoa);
+	}
+
+	public boolean isCoautor(Pessoa pessoa) {
+		return this.coautores != null && this.coautores.contains(pessoa);
+	}
+	
 	public boolean isBolsista(Pessoa pessoa) {
 		return this.bolsistas != null && this.bolsistas.contains(pessoa);
+	}
+	
+	public boolean canViewFile(Pessoa usuario) {
+		return this.autor.equals(usuario) || this.isCoautor(usuario) || trabalhoProduct.isRevisor(usuario)
+				|| this.getEvento().isOrganizador(usuario)
+				|| (this.getSessao() != null && usuario.equals(this.sessao.getResponsavel()));
 	}
 
 }

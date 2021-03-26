@@ -6,7 +6,7 @@
 >
 <title>Trabalho - Detalhes</title>
 
-<section layout:fragment="conteudo" th:with="isOrganizador=${trabalho.evento.isOrganizador(#authentication.getPrincipal())},isRevisor=${trabalho.isRevisor(#authentication.getPrincipal())}">
+<section layout:fragment="conteudo" th:with="isOrganizador=${trabalho.evento.isOrganizador(#authentication.getPrincipal())},isRevisor=${trabalho.getTrabalhoProduct().isRevisor(#authentication.getPrincipal())}">
 	<input type="hidden" id="isOrganizador" th:value="${isOrganizador}"/>
 	<div class="row">
 		<div class="col s12">
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					<div th:if="${isOrganizador or trabalho.isAutor(#authentication.getPrincipal()) or trabalho.isCoautor(#authentication.getPrincipal()) or
-						(trabalho.isRevisor(#authentication.getPrincipal()) and trabalho.evento.isAfterRevisao()) or trabalho.isChefeSessao(#authentication.getPrincipal())}">
+						(trabalho.getTrabalhoProduct().isRevisor(#authentication.getPrincipal()) and trabalho.evento.isAfterRevisao()) or trabalho.isChefeSessao(#authentication.getPrincipal())}">
 						<div class="row">
 							<div class="col s6">
 								<p>Autor</p>

@@ -45,7 +45,7 @@ public class TrabalhoController {
 			return "redirect:/";
 		}
 		// Verifica se é autor, coautor, revisor, chefe da sessão ou organizador do evento
-		if (trabalho.getAutor().equals(usuario) || trabalho.isCoautor(usuario) || trabalho.isRevisor(usuario) ||
+		if (trabalho.getAutor().equals(usuario) || trabalho.isCoautor(usuario) || trabalho.getTrabalhoProduct().isRevisor(usuario) ||
 				trabalho.getEvento().isOrganizador(usuario) || (trabalho.getSessao() != null && usuario.equals(trabalho.getSessao().getResponsavel()))) {
 			model.addAttribute("trabalho", trabalho);
 			model.addAttribute("avaliacoes", Revisao.Classificacao.values());

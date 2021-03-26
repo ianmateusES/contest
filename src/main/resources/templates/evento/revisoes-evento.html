@@ -44,10 +44,10 @@
 											<td><a th:href="@{/trabalho/__${trabalho.id}__}" th:text="${trabalho.titulo}"></a></td>
 											<td th:text="${trabalho.trilha.nome}"></td>
 											<td>
-												<div class="chip white-text grey" th:if="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).NAO_REVISADO}" th:text="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
-												<div class="chip white-text green" th:if="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).APROVADO}" th:text="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
-												<div class="chip white-text red" th:if="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).REPROVADO}" th:text="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
-												<div class="chip white-text orange" th:if="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).RESSALVAS}" th:text="${trabalho.getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
+												<div class="chip white-text grey" th:if="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).NAO_REVISADO}" th:text="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
+												<div class="chip white-text green" th:if="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).APROVADO}" th:text="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
+												<div class="chip white-text red" th:if="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).REPROVADO}" th:text="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
+												<div class="chip white-text orange" th:if="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao() eq T(ufc.quixada.npi.contest.model.Avaliacao).RESSALVAS}" th:text="${trabalho.getTrabalhoProduct().getRevisao(#authentication.getPrincipal()).getAvaliacao().getDescricao()}"></div>
 											</td>
 										</tr>
 									</tbody>
@@ -114,7 +114,7 @@
 									</tr>
 									</thead>
 									<tbody>
-									<tr th:each="trabalho : ${revisados}" th:if="${trabalho.isRevisado()}">
+									<tr th:each="trabalho : ${revisados}" th:if="${trabalho.getTrabalhoProduct().isRevisado()}">
 										<td><a th:href="@{'/trabalho/__${trabalho.id}__'}" th:text="${trabalho.titulo}"></a></td>
 										<td th:text="${trabalho.autor?.nome}"></td>
 										<td>
