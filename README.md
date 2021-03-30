@@ -41,7 +41,7 @@ Para realização do experimento e identificação da evolução das métricas d
   <li>
     Medição do JSpiRIT depois da refatorações do <strong>God Class</strong> </br>
     <div align="center" style="display: flex; flex-direction: columns;">
-      <img alt="God Class" src="./docs/assets/5.God class.png" style="height: 400px">
+      <img alt="God Class" src="./docs/assets/5.God Class.png" style="height: 400px">
     </div>
     </br>
   </li>
