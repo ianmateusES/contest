@@ -75,7 +75,7 @@ Como resultados das refatorações, podemos observar na tabela a seguir a distri
 Como resultado final das métricas de inferência da qualidade do software, podemos visualizar na tabela a seguir que o sistema obteve uma melhoria no atributo de Complexidade no valor **0,06%**.
 
 <div align="center">
-  <img alt="Analise dos atributos de qualidade" src="./docs/assets/atributos de qualidade.png" style="height: 200px">
+  <img alt="Analise dos atributos de qualidade" src="./docs/assets/atributos de qualidade.png" style="height: 400px">
 </div>
 </br> </br>
 
